@@ -58,14 +58,9 @@
 		8485CFF41F59AC1D00B6D8BE /* MutableSelectGueture */ = {
 			isa = PBXGroup;
 			children = (
-				8485CFF81F59AC1D00B6D8BE /* AppDelegate.h */,
-				8485CFF91F59AC1D00B6D8BE /* AppDelegate.m */,
 				8485CFFB1F59AC1D00B6D8BE /* ViewController.h */,
 				8485CFFC1F59AC1D00B6D8BE /* ViewController.m */,
 				8485CFFE1F59AC1D00B6D8BE /* Main.storyboard */,
-				8485D0011F59AC1D00B6D8BE /* Assets.xcassets */,
-				8485D0031F59AC1D00B6D8BE /* LaunchScreen.storyboard */,
-				8485D0061F59AC1D00B6D8BE /* Info.plist */,
 				8485CFF51F59AC1D00B6D8BE /* Supporting Files */,
 			);
 			path = MutableSelectGueture;
@@ -74,6 +69,11 @@
 		8485CFF51F59AC1D00B6D8BE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8485CFF81F59AC1D00B6D8BE /* AppDelegate.h */,
+				8485CFF91F59AC1D00B6D8BE /* AppDelegate.m */,
+				8485D0011F59AC1D00B6D8BE /* Assets.xcassets */,
+				8485D0031F59AC1D00B6D8BE /* LaunchScreen.storyboard */,
+				8485D0061F59AC1D00B6D8BE /* Info.plist */,
 				8485CFF61F59AC1D00B6D8BE /* main.m */,
 			);
 			name = "Supporting Files";
@@ -309,6 +309,7 @@
 				8485D00B1F59AC1D00B6D8BE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
