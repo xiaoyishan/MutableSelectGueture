@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		845897251F5E77380012DE1A /* ImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 845897241F5E77380012DE1A /* ImageItem.m */; };
+		845897281F5E78720012DE1A /* MutSelectCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 845897271F5E78720012DE1A /* MutSelectCollection.m */; };
+		8458972D1F5E89680012DE1A /* UIView+TouchEventBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 8458972C1F5E89680012DE1A /* UIView+TouchEventBlock.m */; };
 		8485CFF71F59AC1D00B6D8BE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485CFF61F59AC1D00B6D8BE /* main.m */; };
 		8485CFFA1F59AC1D00B6D8BE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485CFF91F59AC1D00B6D8BE /* AppDelegate.m */; };
 		8485CFFD1F59AC1D00B6D8BE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8485CFFC1F59AC1D00B6D8BE /* ViewController.m */; };
@@ -16,6 +19,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		845897231F5E77380012DE1A /* ImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageItem.h; sourceTree = "<group>"; };
+		845897241F5E77380012DE1A /* ImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageItem.m; sourceTree = "<group>"; };
+		845897261F5E78720012DE1A /* MutSelectCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutSelectCollection.h; sourceTree = "<group>"; };
+		845897271F5E78720012DE1A /* MutSelectCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutSelectCollection.m; sourceTree = "<group>"; };
+		8458972B1F5E89680012DE1A /* UIView+TouchEventBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TouchEventBlock.h"; sourceTree = "<group>"; };
+		8458972C1F5E89680012DE1A /* UIView+TouchEventBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TouchEventBlock.m"; sourceTree = "<group>"; };
 		8485CFF21F59AC1D00B6D8BE /* MutableSelectGueture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MutableSelectGueture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8485CFF61F59AC1D00B6D8BE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8485CFF81F59AC1D00B6D8BE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -39,6 +48,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		845897221F5E76820012DE1A /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				8458972B1F5E89680012DE1A /* UIView+TouchEventBlock.h */,
+				8458972C1F5E89680012DE1A /* UIView+TouchEventBlock.m */,
+				845897231F5E77380012DE1A /* ImageItem.h */,
+				845897241F5E77380012DE1A /* ImageItem.m */,
+				845897261F5E78720012DE1A /* MutSelectCollection.h */,
+				845897271F5E78720012DE1A /* MutSelectCollection.m */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
 		8485CFE91F59AC1D00B6D8BE = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +80,7 @@
 		8485CFF41F59AC1D00B6D8BE /* MutableSelectGueture */ = {
 			isa = PBXGroup;
 			children = (
+				845897221F5E76820012DE1A /* Class */,
 				8485CFFB1F59AC1D00B6D8BE /* ViewController.h */,
 				8485CFFC1F59AC1D00B6D8BE /* ViewController.m */,
 				8485CFFE1F59AC1D00B6D8BE /* Main.storyboard */,
@@ -150,9 +173,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845897251F5E77380012DE1A /* ImageItem.m in Sources */,
+				845897281F5E78720012DE1A /* MutSelectCollection.m in Sources */,
 				8485CFFD1F59AC1D00B6D8BE /* ViewController.m in Sources */,
 				8485CFFA1F59AC1D00B6D8BE /* AppDelegate.m in Sources */,
 				8485CFF71F59AC1D00B6D8BE /* main.m in Sources */,
+				8458972D1F5E89680012DE1A /* UIView+TouchEventBlock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

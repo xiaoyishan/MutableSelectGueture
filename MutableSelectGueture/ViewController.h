@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ImageItem.h"
+#import "MutSelectCollection.h"
 
 @interface ViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UICollectionView *Collection;
-
+@property (weak, nonatomic) IBOutlet MutSelectCollection *Collection;
+@property NSMutableArray *List;
 @end
 
