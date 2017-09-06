@@ -55,7 +55,7 @@
     SwipePath *path = [SwipePath new];
     path.XX = Point.x-15;
     path.YY = Point.y-20;
-    [AllTouches addObject:path];
+    if([self isInLayout:path])[AllTouches addObject:path];
 }
 
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -63,7 +63,7 @@
     SwipePath *path = [SwipePath new];
     path.XX = Point.x-15;
     path.YY = Point.y-20;
-    [AllTouches addObject:path];
+    if([self isInLayout:path])[AllTouches addObject:path];
     
     if ([self isSwipeGuseture]) {
         self.scrollEnabled = NO;
@@ -76,7 +76,7 @@
     SwipePath *path = [SwipePath new];
     path.XX = Point.x-15;
     path.YY = Point.y-20;
-    [AllTouches addObject:path];
+    if([self isInLayout:path])[AllTouches addObject:path];
 //    NSLog(@"touch end  X: %.0f  Y: %.0f" , Point.x,Point.y);
     
     self.scrollEnabled = YES;
@@ -106,9 +106,16 @@
     return NO;
 }
 
+//断定边界范围 不把范围外的坐标加入轨迹
+-(BOOL)isInLayout:(SwipePath*)path{
+    if (path.XX<0 || path.XX>[UIScreen mainScreen].bounds.size.width-30) {
+        return NO;
+    }return YES;
+}
 
 //模拟选中
 -(void)HightLightCell{
+    if(AllTouches.count==0)return;
     
     SwipePath *BeginPath = AllTouches.firstObject;
     SwipePath *EndPath = AllTouches.lastObject;
