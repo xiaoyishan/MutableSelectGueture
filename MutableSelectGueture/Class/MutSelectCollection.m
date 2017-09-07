@@ -101,48 +101,46 @@
     SwipePath *BeginPath = AllTouches.firstObject;
     SwipePath *EndPath = AllTouches.lastObject;
     
-    NSUInteger BeginRow = 0;
-    NSUInteger EndRow = 0;
+    BeginItem = 0;
+    EndItem = 0;
     
     //计算实际左右间距
     NSUInteger actualInterval = ([UIScreen mainScreen].bounds.size.width-30 - CellSize.width*MaxRowItems)/(MaxRowItems-1);
     
     
-    BeginRow = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
-    EndRow = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
+    BeginItem = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
+    EndItem = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
   
 //    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
   
     BOOL isCancel = NO;//反选标志
     
-    for (NSUInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+    for (NSUInteger k=BeginItem>EndItem?EndItem:BeginItem; k<=(BeginItem>EndItem?BeginItem:EndItem); k++) {
         ImageItem *model = _List[k];
         
         //根据首个cell来决定是全选还是全取消
-        if (k==BeginRow && model.isSelected==YES)isCancel=YES;
+        if (k==BeginItem && model.isSelected==YES)isCancel=YES;
         model.isMoviingSelected=isCancel?NO:YES;
 
     }
     
     //反选（都是选中的标签）
     if (isCancel) {
-        for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
-
+        for (NSInteger k=BeginItem>EndItem?EndItem:BeginItem; k<=(BeginItem>EndItem?BeginItem:EndItem); k++) {
             ImageItem *model = _List[k];
             model.isMoviingSelected=NO;
         }
     }
     
     //重置已取消的模拟状态
-    if (LastMovingRow != EndRow) {
-        for (NSInteger k=BeginRow>LastMovingRow?LastMovingRow:BeginRow; k<=(BeginRow>LastMovingRow?BeginRow:LastMovingRow); k++) {
+    if (LastMovingRow != EndItem) {
+        for (NSInteger k=BeginItem>LastMovingRow?LastMovingRow:BeginItem; k<=(BeginItem>LastMovingRow?BeginItem:LastMovingRow); k++) {
             ImageItem *model = _List[k];
             model.isMoviingSelected=NO;
         }
     }
-    LastMovingRow = EndRow;
+    LastMovingRow = EndItem;
     
-    NSLog(@"刷新！");
     [self reloadData];
     
     
@@ -184,6 +182,7 @@
             }
         }
         model.isSelected=isCancel?NO:YES;
+        model.isMoviingSelected=isCancel?NO:YES;
         cell.alpha = isCancel?1:0.3;
         
     }
@@ -196,6 +195,7 @@
                                                               inSection:0]];
             ImageItem *model = _List[k];
             model.isSelected=NO;
+            model.isMoviingSelected=NO;
             cell.alpha = 1;
         }
     }
@@ -316,8 +316,16 @@
     
     ImageItem *item = _List[indexPath.row];
     cell.alpha = item.isSelected?0.3:1;
+    
     //模拟状态
-    if(self.scrollEnabled==NO)cell.alpha = item.isMoviingSelected?0.3:1;
+    if(self.scrollEnabled==NO){
+        for (NSUInteger k=BeginItem>EndItem?EndItem:BeginItem; k<=(BeginItem>EndItem?BeginItem:EndItem); k++) {
+            ImageItem *model = _List[BeginItem];
+            if(k==indexPath.row)cell.alpha =model.isMoviingSelected?0.3:1;
+        }
+    }
+    
+    
     
     return cell;
 }

@@ -21,6 +21,9 @@
     NSUInteger LastMovingRow;   //上一次终点的轨迹item
     CGFloat CurrentYY;          //当前手指y点的值
     
+    NSUInteger BeginItem;
+    NSUInteger EndItem;
+    
     //layout设置
     CGFloat MinInterval;//左右最小间距
     CGFloat LineSpace;//上下间距
