@@ -14,7 +14,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setupLayers];
+        [self CustomViewSetting];
     }
     return self;
 }
@@ -23,13 +23,14 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-        [self setupLayers];
+        [self CustomViewSetting];
     }
     return self;
 }
 
 
--(void)setupLayers{
+-(void)CustomViewSetting{
+    
     self.delegate=self;
     self.dataSource=self;
     
