@@ -33,6 +33,7 @@
     self.delegate=self;
     self.dataSource=self;
     
+    
     //layout设置
     MinInterval = 5;//左右最小间距
     LineSpace = 10;//上下间距
@@ -87,13 +88,13 @@
 
 
 
-//断定swipe  条件 ：25个点以上 上下滚动距离小于左右距离的1/3
+//断定swipe  条件 ：15个点以上 上下滚动距离小于左右距离的1/3
 -(BOOL)isSwipeGuseture{
     
-    if (AllTouches.count==25) {
+    if (AllTouches.count==15) {
         CGFloat X = 0;
         CGFloat Y = 0;
-        for (int k=0; k<25; k++) {
+        for (int k=0; k<15; k++) {
             SwipePath *FirstPath = AllTouches[0];
             SwipePath *path = AllTouches[k];
             X = X + path.XX+0.001 - FirstPath.XX;
@@ -103,6 +104,27 @@
         if (fabs(X)/fabs(Y)>3) {
 //            NSLog(@"条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
             return YES;
+        }
+    }
+    //额外条件 当滑动过快时 判断滑动距离
+    if (AllTouches.count==5) {
+        CGFloat X = 0;
+        CGFloat Y = 0;
+        for (int k=0; k<5; k++) {
+            SwipePath *FirstPath = AllTouches[0];
+            SwipePath *path = AllTouches[k];
+            X = X + path.XX+0.001 - FirstPath.XX;
+            Y = Y + path.YY+0.001 - FirstPath.YY;
+        }
+        
+        if (fabs(X)/fabs(Y)>3) {
+            SwipePath *Path1 = AllTouches[0];
+            SwipePath *Path2 = AllTouches[4];
+            if (fabs(Path1.XX-Path2.XX)>30) {
+//                NSLog(@"额外条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
+                return YES;
+            }
+            
         }
     }
     return NO;
@@ -143,7 +165,7 @@
                                                           inSection:0]];
         //根据首个cell来决定是全选还是全取消
         if (k==BeginRow) {
-            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
+//            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
             if (cell.alpha!=1){
                 isCancel=YES;
             }
@@ -171,29 +193,27 @@
     if(AllTouches.count<25)return;
     if(self.scrollEnabled) return;
     if (FingerPoint.y<64) {
-        NSLog(@"向上滚动:%.0f  ",FingerPoint.y);
+//        NSLog(@"向上滚动:%.0f  ",FingerPoint.y);
         [self ScrollerToHead];
     }
     if (FingerPoint.y>self.superview.frame.size.height-64) {
-        NSLog(@"向下滚动:%.0f  ",FingerPoint.y);
+//        NSLog(@"向下滚动:%.0f  ",FingerPoint.y);
         [self ScrollerToFoot];
     }
     
 }
 
 -(void)ScrollerToHead{
-    [self setContentOffset:CGPointMake(0, self.contentOffset.y-80) animated:YES];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if(!self.scrollEnabled)[self ScrollerToHead];
-    });
+    if(self.contentOffset.y<0)return;
+    if(!self.scrollEnabled)[self setContentOffset:CGPointMake(0, self.contentOffset.y-1) animated:NO];
+    if(!self.scrollEnabled)[self performSelector:@selector(ScrollerToHead) withObject:nil afterDelay:.1];
 }
 
 
 -(void)ScrollerToFoot{
-    [self setContentOffset:CGPointMake(0, self.contentOffset.y+80) animated:YES];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if(!self.scrollEnabled)[self ScrollerToFoot];
-    });
+    if(self.contentOffset.y>self.contentSize.height)return;
+    if(!self.scrollEnabled)[self setContentOffset:CGPointMake(0, self.contentOffset.y+1) animated:NO];
+    if(!self.scrollEnabled)[self performSelector:@selector(ScrollerToFoot) withObject:nil afterDelay:.1];
 }
 
 

@@ -133,6 +133,7 @@
 				TargetAttributes = {
 					8485CFF11F59AC1D00B6D8BE = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = G739QEL3W7;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -298,6 +299,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G739QEL3W7;
 				INFOPLIST_FILE = MutableSelectGueture/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = xiaSang.MutableSelectGueture;
@@ -309,6 +311,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G739QEL3W7;
 				INFOPLIST_FILE = MutableSelectGueture/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = xiaSang.MutableSelectGueture;
