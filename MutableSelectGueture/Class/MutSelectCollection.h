@@ -19,6 +19,7 @@
 
 @interface MutSelectCollection : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource>{
     NSMutableArray *AllTouches; //轨迹
+    BOOL isCancel;//反选标志
     
     //layout设置
     CGFloat MinInterval;//左右最小间距

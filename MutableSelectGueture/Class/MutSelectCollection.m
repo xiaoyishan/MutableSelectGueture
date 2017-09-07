@@ -56,6 +56,7 @@
     path.XX = Point.x-15;
     path.YY = Point.y-20;
     if([self isInLayout:path])[AllTouches addObject:path];
+    
 }
 
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -67,8 +68,9 @@
     
     if ([self isSwipeGuseture]) {
         self.scrollEnabled = NO;
-        
     }
+//    [self HightLightCell];//暂时高亮
+    [self RollinHeadOrFoot:[[touches anyObject] locationInView:self.superview]];//上下滚动
 }
 
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -80,7 +82,7 @@
 //    NSLog(@"touch end  X: %.0f  Y: %.0f" , Point.x,Point.y);
     
     self.scrollEnabled = YES;
-    [self HightLightCell];
+    [self HightLightCell];//暂时高亮
 }
 
 
@@ -106,7 +108,7 @@
     return NO;
 }
 
-//断定边界范围 不把范围外的坐标加入轨迹
+//断定边界范围 确定范围外的坐标不加入到轨迹
 -(BOOL)isInLayout:(SwipePath*)path{
     if (path.XX<0 || path.XX>[UIScreen mainScreen].bounds.size.width-30) {
         return NO;
@@ -116,6 +118,7 @@
 //模拟选中
 -(void)HightLightCell{
     if(AllTouches.count==0)return;
+    
     
     SwipePath *BeginPath = AllTouches.firstObject;
     SwipePath *EndPath = AllTouches.lastObject;
@@ -130,45 +133,68 @@
     BeginRow = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
     EndRow = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
   
-    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
+//    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
   
-//    BOOL isAllSelect = NO;//反选标志
-    
-    
-    
-    
+    isCancel = NO;//反选标志
     
     for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
         UICollectionViewCell *cell = [self cellForItemAtIndexPath:
                                       [NSIndexPath indexPathForItem:k
                                                           inSection:0]];
-//        ImageItem *path = _List[k];
-        
-        cell.alpha = .3;
-//        if(path.isSelected==YES)isAllSelect=YES;
-//        path.isSelected = YES;
-        
+        //根据首个cell来决定是全选还是全取消
+        if (k==BeginRow) {
+            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
+            if (cell.alpha!=1){
+                isCancel=YES;
+            }
+        }
+
+        cell.alpha = isCancel?1:0.3;
+
     }
     
-    // 反选（都是选中的标签）
-//    if (isAllSelect) {
-//        for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
-//            UICollectionViewCell *cell = [self cellForItemAtIndexPath:
-//                                          [NSIndexPath indexPathForItem:k
-//                                                              inSection:0]];
-//            cell.alpha = 1;
-//        }
-//    }
+    //反选（都是选中的标签）
+    if (isCancel) {
+        for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+            UICollectionViewCell *cell = [self cellForItemAtIndexPath:
+                                          [NSIndexPath indexPathForItem:k
+                                                              inSection:0]];
+            cell.alpha = 1;
+        }
+    }
     
 }
 
 
+//自动上下滚动
+-(void)RollinHeadOrFoot:(CGPoint)FingerPoint{
+    if(AllTouches.count<25)return;
+    if(self.scrollEnabled) return;
+    if (FingerPoint.y<64) {
+        NSLog(@"向上滚动:%.0f  ",FingerPoint.y);
+        [self ScrollerToHead];
+    }
+    if (FingerPoint.y>self.superview.frame.size.height-64) {
+        NSLog(@"向下滚动:%.0f  ",FingerPoint.y);
+        [self ScrollerToFoot];
+    }
+    
+}
+
+-(void)ScrollerToHead{
+    [self setContentOffset:CGPointMake(0, self.contentOffset.y-80) animated:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if(!self.scrollEnabled)[self ScrollerToHead];
+    });
+}
 
 
-
-
-
-
+-(void)ScrollerToFoot{
+    [self setContentOffset:CGPointMake(0, self.contentOffset.y+80) animated:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if(!self.scrollEnabled)[self ScrollerToFoot];
+    });
+}
 
 
 
