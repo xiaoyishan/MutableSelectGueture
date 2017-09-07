@@ -38,7 +38,7 @@
     MinInterval = 5;//左右最小间距
     LineSpace = 10;//上下间距
     CellSize = CGSizeMake(80, 80);//cell的尺寸
-    MaxRowItems = ([UIScreen mainScreen].bounds.size.width-30)/(CellSize.width+MinInterval);
+    MaxRowItems = ([UIScreen mainScreen].bounds.size.width-30+MinInterval)/(CellSize.width+MinInterval);
     
     
     
@@ -262,7 +262,8 @@
 
 
 -(void)ScrollerToFoot{
-    if(self.contentOffset.y>self.contentSize.height)return;
+    NSLog(@"滑动y轴：%.0f  view内容高度：%.0f",self.contentOffset.y,self.contentSize.height);
+    if(self.contentOffset.y>self.contentSize.height-self.frame.size.height+LineSpace)return;
     if(!self.scrollEnabled)[self setContentOffset:CGPointMake(0, self.contentOffset.y+1) animated:NO];
     if(!self.scrollEnabled)[self performSelector:@selector(ScrollerToFoot) withObject:nil afterDelay:.1];
 }

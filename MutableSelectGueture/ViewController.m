@@ -17,7 +17,7 @@
     
     
     _List = [NSMutableArray new];
-    for (int k=0; k<1000; k++) {
+    for (int k=0; k<100; k++) {
         ImageItem *item = [ImageItem new];
         item.Dex = k;
         item.isSelected = NO;

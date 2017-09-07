@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ImageItem.h"
 #import "MutSelectCollection.h"
-#import "UIView+TouchEventBlock.h"
 
 
 
