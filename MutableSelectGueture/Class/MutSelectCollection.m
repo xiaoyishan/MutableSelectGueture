@@ -71,7 +71,8 @@
         self.scrollEnabled = NO;
     }
     [self HightLightCell];//暂时高亮
-    [self RollinHeadOrFoot:[[touches anyObject] locationInView:self.superview]];//上下滚动
+    CurrentYY = [[touches anyObject] locationInView:self.superview].y;
+    [self RollinHeadOrFoot];//上下滚动
 }
 
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -131,7 +132,20 @@
             model.isMoviingSelected=NO;
         }
     }
+    
+    //重置已取消的模拟状态
+    if (LastMovingRow != EndRow) {
+        for (NSInteger k=BeginRow>LastMovingRow?LastMovingRow:BeginRow; k<=(BeginRow>LastMovingRow?BeginRow:LastMovingRow); k++) {
+            ImageItem *model = _List[k];
+            model.isMoviingSelected=NO;
+        }
+    }
+    LastMovingRow = EndRow;
+    
+    NSLog(@"刷新！");
     [self reloadData];
+    
+    
 }
 
 
@@ -240,14 +254,14 @@
 
 
 //自动上下滚动
--(void)RollinHeadOrFoot:(CGPoint)FingerPoint{
+-(void)RollinHeadOrFoot{
     if(AllTouches.count<25)return;
     if(self.scrollEnabled) return;
-    if (FingerPoint.y<64) {
+    if (CurrentYY<64) {
 //        NSLog(@"向上滚动:%.0f  ",FingerPoint.y);
         [self ScrollerToHead];
     }
-    if (FingerPoint.y>self.superview.frame.size.height-64) {
+    if (CurrentYY>self.frame.size.height-64) {
 //        NSLog(@"向下滚动:%.0f  ",FingerPoint.y);
         [self ScrollerToFoot];
     }
@@ -255,6 +269,7 @@
 }
 
 -(void)ScrollerToHead{
+    if(CurrentYY>64)return;
     if(self.contentOffset.y<0)return;
     if(!self.scrollEnabled)[self setContentOffset:CGPointMake(0, self.contentOffset.y-1) animated:NO];
     if(!self.scrollEnabled)[self performSelector:@selector(ScrollerToHead) withObject:nil afterDelay:.1];
@@ -262,6 +277,7 @@
 
 
 -(void)ScrollerToFoot{
+    if(CurrentYY<self.frame.size.height-64)return;
     NSLog(@"滑动y轴：%.0f  view内容高度：%.0f",self.contentOffset.y,self.contentSize.height);
     if(self.contentOffset.y>self.contentSize.height-self.frame.size.height+LineSpace)return;
     if(!self.scrollEnabled)[self setContentOffset:CGPointMake(0, self.contentOffset.y+1) animated:NO];

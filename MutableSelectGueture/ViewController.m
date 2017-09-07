@@ -14,10 +14,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    //commit test 3
+ 
     
     _List = [NSMutableArray new];
-    for (int k=0; k<100; k++) {
+    for (int k=0; k<1000; k++) {
         ImageItem *item = [ImageItem new];
         item.Dex = k;
         item.isSelected = NO;
