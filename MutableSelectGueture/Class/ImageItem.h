@@ -12,6 +12,7 @@
 
 @property NSInteger Dex; //位置
 @property BOOL isSelected; //选中状态
+@property BOOL isMoviingSelected; //模拟选中 
 //@property UIImage *image;  //图
 
 @end

@@ -70,7 +70,7 @@
     if ([self isSwipeGuseture]) {
         self.scrollEnabled = NO;
     }
-//    [self HightLightCell];//暂时高亮
+    [self HightLightCell];//暂时高亮
     [self RollinHeadOrFoot:[[touches anyObject] locationInView:self.superview]];//上下滚动
 }
 
@@ -83,9 +83,110 @@
 //    NSLog(@"touch end  X: %.0f  Y: %.0f" , Point.x,Point.y);
     
     self.scrollEnabled = YES;
-    [self HightLightCell];//暂时高亮
+    [self EndGuestureAndSelected];//手势结束最终选中
+    [self reloadData];
 }
 
+
+
+
+
+
+//模拟选中
+-(void)HightLightCell{
+    if(AllTouches.count==0)return;
+    
+    
+    SwipePath *BeginPath = AllTouches.firstObject;
+    SwipePath *EndPath = AllTouches.lastObject;
+    
+    NSUInteger BeginRow = 0;
+    NSUInteger EndRow = 0;
+    
+    //计算实际左右间距
+    NSUInteger actualInterval = ([UIScreen mainScreen].bounds.size.width-30 - CellSize.width*MaxRowItems)/(MaxRowItems-1);
+    
+    
+    BeginRow = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
+    EndRow = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
+  
+//    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
+  
+    BOOL isCancel = NO;//反选标志
+    
+    for (NSUInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+        ImageItem *model = _List[k];
+        
+        //根据首个cell来决定是全选还是全取消
+        if (k==BeginRow && model.isSelected==YES)isCancel=YES;
+        model.isMoviingSelected=isCancel?NO:YES;
+
+    }
+    
+    //反选（都是选中的标签）
+    if (isCancel) {
+        for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+
+            ImageItem *model = _List[k];
+            model.isMoviingSelected=NO;
+        }
+    }
+    [self reloadData];
+}
+
+
+//手势结束最终选中
+-(void)EndGuestureAndSelected{
+    if(AllTouches.count==0)return;
+    
+    
+    SwipePath *BeginPath = AllTouches.firstObject;
+    SwipePath *EndPath = AllTouches.lastObject;
+    
+    NSUInteger BeginRow = 0;
+    NSUInteger EndRow = 0;
+    
+    //计算实际左右间距
+    NSUInteger actualInterval = ([UIScreen mainScreen].bounds.size.width-30 - CellSize.width*MaxRowItems)/(MaxRowItems-1);
+    
+    
+    BeginRow = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
+    EndRow = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
+    
+    //    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
+    
+    BOOL isCancel = NO;//反选标志
+    
+    for (NSUInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+        ImageItem *model = _List[k];
+        UICollectionViewCell *cell = [self cellForItemAtIndexPath:
+                                      [NSIndexPath indexPathForItem:k
+                                                          inSection:0]];
+        //根据首个cell来决定是全选还是全取消
+        if (k==BeginRow) {
+            //            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
+            if (model.isSelected==YES){
+                isCancel=YES;
+            }
+        }
+        model.isSelected=isCancel?NO:YES;
+        cell.alpha = isCancel?1:0.3;
+        
+    }
+    
+    //反选（都是选中的标签）
+    if (isCancel) {
+        for (NSUInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
+            UICollectionViewCell *cell = [self cellForItemAtIndexPath:
+                                          [NSIndexPath indexPathForItem:k
+                                                              inSection:0]];
+            ImageItem *model = _List[k];
+            model.isSelected=NO;
+            cell.alpha = 1;
+        }
+    }
+    
+}
 
 
 //断定swipe  条件 ：15个点以上 上下滚动距离小于左右距离的1/3
@@ -102,7 +203,7 @@
         }
         
         if (fabs(X)/fabs(Y)>3) {
-//            NSLog(@"条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
+            //            NSLog(@"条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
             return YES;
         }
     }
@@ -121,7 +222,7 @@
             SwipePath *Path1 = AllTouches[0];
             SwipePath *Path2 = AllTouches[4];
             if (fabs(Path1.XX-Path2.XX)>30) {
-//                NSLog(@"额外条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
+                //                NSLog(@"额外条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
                 return YES;
             }
             
@@ -135,56 +236,6 @@
     if (path.XX<0 || path.XX>[UIScreen mainScreen].bounds.size.width-30) {
         return NO;
     }return YES;
-}
-
-//模拟选中
--(void)HightLightCell{
-    if(AllTouches.count==0)return;
-    
-    
-    SwipePath *BeginPath = AllTouches.firstObject;
-    SwipePath *EndPath = AllTouches.lastObject;
-    
-    NSInteger BeginRow = 0;
-    NSInteger EndRow = 0;
-    
-    //计算实际左右间距
-    NSInteger actualInterval = ([UIScreen mainScreen].bounds.size.width-30 - CellSize.width*MaxRowItems)/(MaxRowItems-1);
-    
-    
-    BeginRow = floor(BeginPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(BeginPath.XX/(CellSize.width+actualInterval));
-    EndRow = floor(EndPath.YY/(CellSize.height+LineSpace))*MaxRowItems + floor(EndPath.XX/(CellSize.width+actualInterval));
-  
-//    NSLog(@"结果: %.0f %.0f 计算的起点和终点 %zd %zd", EndPath.XX, EndPath.YY ,BeginRow,EndRow);
-  
-    isCancel = NO;//反选标志
-    
-    for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
-        UICollectionViewCell *cell = [self cellForItemAtIndexPath:
-                                      [NSIndexPath indexPathForItem:k
-                                                          inSection:0]];
-        //根据首个cell来决定是全选还是全取消
-        if (k==BeginRow) {
-//            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
-            if (cell.alpha!=1){
-                isCancel=YES;
-            }
-        }
-
-        cell.alpha = isCancel?1:0.3;
-
-    }
-    
-    //反选（都是选中的标签）
-    if (isCancel) {
-        for (NSInteger k=BeginRow>EndRow?EndRow:BeginRow; k<=(BeginRow>EndRow?BeginRow:EndRow); k++) {
-            UICollectionViewCell *cell = [self cellForItemAtIndexPath:
-                                          [NSIndexPath indexPathForItem:k
-                                                              inSection:0]];
-            cell.alpha = 1;
-        }
-    }
-    
 }
 
 
@@ -247,9 +298,9 @@
     [cell sizeToFit];
     
     ImageItem *item = _List[indexPath.row];
-    if (item.isSelected) {
-        cell.alpha = 0.3;
-    }
+    cell.alpha = item.isSelected?0.3:1;
+    //模拟状态
+    if(self.scrollEnabled==NO)cell.alpha = item.isMoviingSelected?0.3:1;
     
     return cell;
 }
@@ -258,13 +309,9 @@
     ImageItem *item = _List[indexPath.row];
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     
-    if (item.isSelected) {
-        item.isSelected = NO;
-        cell.alpha = 1;
-    }else{
-        item.isSelected = YES;
-        cell.alpha = 0.3;
-    }
+    cell.alpha = item.isSelected?0.3:1;
+    item.isSelected = item.isSelected?NO:YES;
+    
     
 }
 
