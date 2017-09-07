@@ -85,7 +85,7 @@
 //    NSLog(@"touch end  X: %.0f  Y: %.0f" , Point.x,Point.y);
     
     self.scrollEnabled = YES;
-    [self EndGuestureAndSelected];//手势结束最终选中
+    [self EndGuestureAndSelected];//最终选中
     [self reloadData];
 }
 
@@ -148,7 +148,7 @@
 }
 
 
-//手势结束最终选中
+//最终选中
 -(void)EndGuestureAndSelected{
     if(AllTouches.count==0)return;
     
@@ -177,7 +177,7 @@
                                                           inSection:0]];
         //根据首个cell来决定是全选还是全取消
         if (k==BeginRow) {
-            //            NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
+            //NSLog(@"K:%zd began:%zd end:%zd",k,BeginRow,EndRow);
             if (model.isSelected==YES){
                 isCancel=YES;
             }
@@ -218,7 +218,7 @@
         }
         
         if (fabs(X)/fabs(Y)>3) {
-            //            NSLog(@"条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
+            //NSLog(@"条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
             return YES;
         }
     }
@@ -237,7 +237,7 @@
             SwipePath *Path1 = AllTouches[0];
             SwipePath *Path2 = AllTouches[4];
             if (fabs(Path1.XX-Path2.XX)>30) {
-                //                NSLog(@"额外条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
+                //NSLog(@"额外条件成立!!!   X:%.0f Y:%.0f 比例:%.1f", X,Y, X/Y/1.0 );
                 return YES;
             }
             
